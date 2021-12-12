@@ -32,7 +32,7 @@ public class TCPConnectionManager{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        }).start();
        // new Thread(new ReceivedMessagesHandlert(client.getInputStream(), client)).start();
         /*new Thread(() -> {
             try {
