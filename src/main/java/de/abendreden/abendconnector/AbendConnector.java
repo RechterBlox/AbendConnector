@@ -8,21 +8,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 
 public class AbendConnector extends JavaPlugin {
+
     @Override
     public void onEnable() {
         initCommands();
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> Bukkit.getScheduler().runTask(this, this::run), 20*1L);
-
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            public void run() {
+                new Thread(() -> {
+                    try {
+                        new TCPConnectionManager().run();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+        }, 20*1L);
     }
+    public void test() {
 
-    public void run(){
-
-        try {
-            new TCPConnectionManager().run(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -30,4 +33,7 @@ public class AbendConnector extends JavaPlugin {
         getCommand("info").setExecutor(new InfoCommand());
     }
 
+    public static void commandsend(String command) {
+       Bukkit.broadcastMessage(command);
+    }
 }
