@@ -1,0 +1,6 @@
+name: AbendConnector
+version: 1.0
+main: de.abendreden.abendconnector.AbendConnector
+api-version: 1.18
+commands:
+  info:
