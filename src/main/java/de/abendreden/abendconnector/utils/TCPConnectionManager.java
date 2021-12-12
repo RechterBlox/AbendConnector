@@ -18,6 +18,7 @@ public class TCPConnectionManager{
     private int port = 9000;
     private String nickname;
     private AbendConnector plugin;
+    private PrintStream output = null;
 
     public void run(AbendConnector plugin) throws IOException {
         // connect client to server
@@ -26,9 +27,10 @@ public class TCPConnectionManager{
 
         Socket client = new Socket(host, port);
         System.out.println("Client successfully connected to server!");
+        output = new PrintStream(client.getOutputStream());
         new Thread(() -> {
             try {
-                new ReceivedMessagesHandlert(client.getInputStream(), client, plugin).run();
+                new ReceivedMessagesHandlert(client.getInputStream(), client, plugin, output).run();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -41,9 +43,6 @@ public class TCPConnectionManager{
                 e.printStackTrace();
             }
         }).start();*/
-
-        PrintStream output = null;
-        output = new PrintStream(client.getOutputStream());
         output.println("Servername:Test");
     }
 }
@@ -53,36 +52,33 @@ class ReceivedMessagesHandlert {
     private InputStream server;
     private Socket client;
     private AbendConnector plugin;
+    private PrintStream output;
 
-    public ReceivedMessagesHandlert(InputStream server, Socket client, AbendConnector plugin) {
+    public ReceivedMessagesHandlert(InputStream server, Socket client, AbendConnector plugin, PrintStream output) {
         this.server = server;
         this.client = client;
         this.plugin = plugin;
-        System.out.println("tssfras");
+        this.output = output;
     }
 
     public void run() {
-        System.out.println("test");
-        // receive server messages and print out to screen
         Scanner s = new Scanner(server);
         while (s.hasNextLine()) {
             String command = s.nextLine();
             System.out.println(command);
-
-            Bukkit.getScheduler().runTask(plugin,() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
-
             if (command.equalsIgnoreCase("!close")) {
                 try {
                     client.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else if (command.equalsIgnoreCase("!status")) {
+                output.println("online");
+            } else {
+                Bukkit.getScheduler().runTask(plugin,() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
             }
-
         }
-
     }
-
 }
 
 
