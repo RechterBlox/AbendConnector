@@ -11,22 +11,22 @@ public class AbendConnector extends JavaPlugin {
     @Override
     public void onEnable() {
         initCommands();
-//        Bukkit.getScheduler().runTask(this, () -> {
-//            try {
-//                new TCPConnectionManager().run(this);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-        new Thread(() -> {
-
+        Bukkit.getScheduler().runTask(this, () -> {
             try {
                 new TCPConnectionManager().run(this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }).start();
+        });
+//        new Thread(() -> {
+//
+//            try {
+//                new TCPConnectionManager().run(this);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }).start();
     }
 
     public void initCommands() {
