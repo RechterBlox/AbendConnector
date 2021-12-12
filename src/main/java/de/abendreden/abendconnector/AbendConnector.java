@@ -5,13 +5,18 @@ import de.abendreden.abendconnector.utils.TCPConnectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class AbendConnector extends JavaPlugin {
 
     @Override
     public void onEnable() {
         initCommands();
+        if (!new File("./plugins/AbendConnector/config.yml").exists()) {
+            saveDefaultConfig();
+        }
         new Thread(() -> {
             try {
                 new TCPConnectionManager().run(this);
@@ -22,6 +27,6 @@ public class AbendConnector extends JavaPlugin {
     }
 
     public void initCommands() {
-        getCommand("info").setExecutor(new InfoCommand());
+        Objects.requireNonNull(getCommand("info")).setExecutor(new InfoCommand());
     }
 }

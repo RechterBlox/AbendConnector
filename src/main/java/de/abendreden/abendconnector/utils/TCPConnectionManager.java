@@ -2,6 +2,7 @@ package de.abendreden.abendconnector.utils;
 
 import de.abendreden.abendconnector.AbendConnector;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +22,7 @@ public class TCPConnectionManager{
     private PrintStream output = null;
 
     public void run(AbendConnector plugin) throws IOException {
-        // connect client to server
-
         this.plugin = plugin;
-
         Socket client = new Socket(host, port);
         System.out.println("Client successfully connected to server!");
         output = new PrintStream(client.getOutputStream());
@@ -35,15 +33,9 @@ public class TCPConnectionManager{
                 e.printStackTrace();
             }
         }).start();
-       // new Thread(new ReceivedMessagesHandlert(client.getInputStream(), client)).start();
-        /*new Thread(() -> {
-            try {
-                new ReceivedMessagesHandlert(client.getInputStream(), client).run();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();*/
-        output.println("Servername:Test");
+        YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(new File("./plugins/AbendConnector/config.yml"));
+        String servername = yamlConfiguration.getString("servername");
+        output.println("Servername:" + servername);
     }
 }
 
