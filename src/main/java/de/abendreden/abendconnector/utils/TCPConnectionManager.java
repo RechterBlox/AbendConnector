@@ -26,7 +26,7 @@ public class TCPConnectionManager{
 
         Socket client = new Socket(host, port);
         System.out.println("Client successfully connected to server!");
-        Bukkit.getScheduler().runTask(plugin, () -> {
+        new Thread(() -> {
             try {
                 new ReceivedMessagesHandlert(client.getInputStream(), client, plugin).run();
             } catch (IOException e) {
@@ -69,7 +69,8 @@ class ReceivedMessagesHandlert {
             String command = s.nextLine();
             System.out.println(command);
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            Bukkit.getScheduler().runTask(plugin,() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+
             if (command.equalsIgnoreCase("!close")) {
                 try {
                     client.close();

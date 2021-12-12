@@ -12,17 +12,13 @@ public class AbendConnector extends JavaPlugin {
     @Override
     public void onEnable() {
         initCommands();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            public void run() {
-                new Thread(() -> {
-                    try {
-                        new TCPConnectionManager().run();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }).start();
+        new Thread(() -> {
+            try {
+                new TCPConnectionManager().run(this);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }, 20*1L);
+        }).start();
     }
     public void test() {
 
