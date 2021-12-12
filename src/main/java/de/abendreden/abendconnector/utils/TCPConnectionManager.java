@@ -17,14 +17,18 @@ public class TCPConnectionManager{
     private String host = "127.0.0.1";
     private int port = 9000;
     private String nickname;
+    private AbendConnector plugin;
 
-    public void run() throws IOException {
+    public void run(AbendConnector plugin) throws IOException {
         // connect client to server
+
+        this.plugin = plugin;
+
         Socket client = new Socket(host, port);
         System.out.println("Client successfully connected to server!");
-        Bukkit.getScheduler().runTask(AbendConnector.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             try {
-                new ReceivedMessagesHandlert(client.getInputStream(), client).run();
+                new ReceivedMessagesHandlert(client.getInputStream(), client, plugin).run();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,18 +48,19 @@ public class TCPConnectionManager{
     }
 }
 
-class ReceivedMessagesHandlert implements Runnable {
+class ReceivedMessagesHandlert {
 
     private InputStream server;
     private Socket client;
+    private AbendConnector plugin;
 
-    public ReceivedMessagesHandlert(InputStream server, Socket client) {
+    public ReceivedMessagesHandlert(InputStream server, Socket client, AbendConnector plugin) {
         this.server = server;
         this.client = client;
+        this.plugin = plugin;
         System.out.println("tssfras");
     }
 
-    @Override
     public void run() {
         System.out.println("test");
         // receive server messages and print out to screen
@@ -64,7 +69,7 @@ class ReceivedMessagesHandlert implements Runnable {
             String command = s.nextLine();
             System.out.println(command);
 
-            AbendConnector.commandsend(command);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
             if (command.equalsIgnoreCase("!close")) {
                 try {
                     client.close();

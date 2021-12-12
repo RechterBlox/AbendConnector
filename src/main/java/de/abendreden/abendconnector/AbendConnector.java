@@ -8,29 +8,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 
 public class AbendConnector extends JavaPlugin {
-    public static AbendConnector instance;
     @Override
     public void onEnable() {
         initCommands();
-        instance = this;
-        Bukkit.getScheduler().runTask(this, () -> {
+//        Bukkit.getScheduler().runTask(this, () -> {
+//            try {
+//                new TCPConnectionManager().run(this);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+        new Thread(() -> {
+
             try {
-                new TCPConnectionManager().run();
+                new TCPConnectionManager().run(this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
-    }
 
-    public static AbendConnector getInstance() {
-        return instance;
+        }).start();
     }
 
     public void initCommands() {
         getCommand("info").setExecutor(new InfoCommand());
     }
 
-    public static void commandsend(String command) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "op PeakyBlox");
-    }
 }
