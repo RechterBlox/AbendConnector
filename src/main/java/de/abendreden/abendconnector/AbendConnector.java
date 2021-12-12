@@ -20,16 +20,8 @@ public class AbendConnector extends JavaPlugin {
             }
         }).start();
     }
-    public void test() {
-
-
-    }
 
     public void initCommands() {
         getCommand("info").setExecutor(new InfoCommand());
-    }
-
-    public static void commandsend(String command) {
-       Bukkit.broadcastMessage(command);
     }
 }
