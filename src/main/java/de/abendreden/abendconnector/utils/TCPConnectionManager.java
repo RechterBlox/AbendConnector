@@ -14,8 +14,8 @@ import java.util.Scanner;
 public class TCPConnectionManager{
     private String host = "127.0.0.1";
     private int port = 9000;
-    private String nickname;
-    private AbendConnector plugin;
+    private String nickname = null;
+    private AbendConnector plugin = null;
     private PrintStream output = null;
 
     public void run(AbendConnector plugin) throws IOException {
