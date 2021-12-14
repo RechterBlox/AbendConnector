@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.concurrent.CompletableFuture;
 
 public class TCPConnectionManager{
     private String host = "127.0.0.1";
